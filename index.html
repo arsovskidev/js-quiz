@@ -18,13 +18,14 @@
     <title>Challenge 18</title>
   </head>
   <body>
-    <section id="loading">
+    <section id="loading" class="d-none">
       <div class="container pt-5 pb-5 blurred">
         <h1 class="text-center display-4">Loading Quiz...</h1>
         <div id="spinner"></div>
+        <h4 id="loaderLogs" class="text-center mt-3"></h4>
       </div>
     </section>
-    <section id="begin">
+    <section id="begin" class="d-none">
       <div class="container pt-5 pb-5 blurred">
         <h1 class="text-center display-4">Welcome to Brainster's Trivia!</h1>
         <p class="text-center">Click on the start button to begin.</p>
@@ -34,7 +35,7 @@
         </div>
       </div>
     </section>
-    <section id="inAction">
+    <section id="inAction" class="d-none">
       <div class="container pt-5 pb-5 blurred">
         <h1 class="text-center display-4">Good Luck!</h1>
         <p class="text-center">Click on the button to start over.</p>
@@ -48,11 +49,11 @@
           <div class="col-8 mx-auto">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">
+                <t class="card-title">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
                   omnis magnam, odit laudantium quis nostrum ratione
                   necessitatibus voluptate.
-                </h3>
+                </t>
               </div>
               <div class="card-body d-flex justify-content-between">
                 <a href="#" class="btn btn-outline-dark">Answer 1</a>
@@ -69,6 +70,8 @@
         <h1 class="text-center display-4">Completed: 0/20</h1>
       </div>
     </section>
+
+    <ul id="all"></ul>
     <!-- Custom JS -->
     <script src="frontend/js/main.js"></script>
     <!-- /// -->
