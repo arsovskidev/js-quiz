@@ -1,15 +1,25 @@
 console.log("Script Loaded.");
 
-let fetched = [];
+let questions = [];
 // Section for loading.
-const loader = document.querySelector("#loading");
+const loadingSection = document.querySelector("#loading");
+const beginSection = document.querySelector("#begin");
+const inActionSection = document.querySelector("#inAction");
+
 const loaderLogs = document.querySelector("#loaderLogs");
 
 function showLoading() {
-  loader.classList.remove("d-none");
+  // Show
+  loadingSection.classList.remove("d-none");
+  // Hide
+  beginSection.classList.add("d-none");
+  inActionSection.classList.add("d-none");
 }
 function hideLoading() {
-  loader.classList.add("d-none");
+  // Hide
+  loadingSection.classList.add("d-none");
+  // Show
+  beginSection.classList.remove("d-none");
 }
 
 // Section for api call.
@@ -20,8 +30,7 @@ showLoading();
 fetch(url)
   .then((response) => response.json())
   .then(function (data) {
-    let questions = data.results;
-    fetched.push(questions);
+    questions = data.results;
     hideLoading();
   })
   .catch(function (error) {
