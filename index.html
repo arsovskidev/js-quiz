@@ -13,7 +13,11 @@
     />
     <!-- /// -->
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="frontend/css/global.css?v=7" />
+    <link rel="stylesheet" href="frontend/css/global.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <!-- /// -->
     <title>Challenge 18</title>
   </head>
@@ -49,7 +53,7 @@
       <div class="container pt-5 pb-5">
         <div class="row">
           <div class="col-8 mx-auto">
-            <div class="card">
+            <div id="questionContainer" class="card animate__animated">
               <div class="card-header">
                 <t id="questionTitle" class="card-title"> </t>
               </div>
@@ -65,6 +69,24 @@
       <div class="container pt-5 pb-5 blurred">
         <h1 class="text-center display-4">
           Completed: <span id="questionsCompleted"></span>/20
+        </h1>
+      </div>
+    </section>
+    <section id="results" class="d-none">
+      <div class="container pt-5 pb-5 blurred">
+        <h1 class="text-center display-4">Let's see your score!</h1>
+        <p class="text-center">Click on the button to start again.</p>
+        <hr />
+        <div class="text-center">
+          <button id="resetBtn" class="btn btn-danger text-light">
+            Try Again
+          </button>
+        </div>
+      </div>
+
+      <div class="container pt-5 pb-5 blurred">
+        <h1 class="text-center display-4">
+          Total Correct Answers: <span id="questionsCorrect"></span>/20
         </h1>
       </div>
     </section>
