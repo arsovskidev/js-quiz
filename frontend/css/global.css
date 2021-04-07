@@ -1,0 +1,23 @@
+#spinner {
+  width: 4rem;
+  height: 4rem;
+  border: 5px solid #fffb003a;
+  border-top: 6px solid #f8e800;
+  border-radius: 100%;
+  margin: auto;
+  margin-top: 4rem;
+  animation: spin 1s infinite linear;
+}
+
+.blurred {
+  background-color: #f0f0f0;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
