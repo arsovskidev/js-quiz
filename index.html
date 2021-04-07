@@ -31,7 +31,7 @@
         <p class="text-center">Click on the start button to begin.</p>
         <hr />
         <div class="text-center">
-          <button class="btn btn-success">Start</button>
+          <button id="startBtn" class="btn btn-success">Start</button>
         </div>
       </div>
     </section>
@@ -41,7 +41,9 @@
         <p class="text-center">Click on the button to start over.</p>
         <hr />
         <div class="text-center">
-          <button class="btn btn-warning text-light">Start Over</button>
+          <button id="resetBtn" class="btn btn-warning text-light">
+            Start Over
+          </button>
         </div>
       </div>
       <div class="container pt-5 pb-5">
@@ -49,29 +51,23 @@
           <div class="col-8 mx-auto">
             <div class="card">
               <div class="card-header">
-                <t class="card-title">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
-                  omnis magnam, odit laudantium quis nostrum ratione
-                  necessitatibus voluptate.
-                </t>
+                <t id="questionTitle" class="card-title"> </t>
               </div>
-              <div class="card-body d-flex justify-content-between">
-                <a href="#" class="btn btn-outline-dark">Answer 1</a>
-                <a href="#" class="btn btn-outline-dark">Answer 2</a>
-                <a href="#" class="btn btn-outline-dark">Answer 3</a>
-                <a href="#" class="btn btn-outline-dark">Answer 4</a>
-              </div>
-              <div class="card-footer text-muted">Category</div>
+              <div
+                id="answersWrapper"
+                class="card-body d-flex justify-content-around"
+              ></div>
+              <div id="category" class="card-footer text-muted">Category</div>
             </div>
           </div>
         </div>
       </div>
       <div class="container pt-5 pb-5 blurred">
-        <h1 class="text-center display-4">Completed: 0/20</h1>
+        <h1 class="text-center display-4">
+          Completed: <span id="questionsCompleted"></span>/20
+        </h1>
       </div>
     </section>
-
-    <ul id="all"></ul>
     <!-- Custom JS -->
     <script src="frontend/js/main.js"></script>
     <!-- /// -->
