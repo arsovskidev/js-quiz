@@ -1,6 +1,6 @@
-console.log("Script Loaded.");
+console.log("Quiz Loaded.");
 
-// Section for loading.
+// Section for loading & configuration.
 const loadingSection = document.querySelector("#loading");
 const beginSection = document.querySelector("#begin");
 const inActionSection = document.querySelector("#inAction");
@@ -8,14 +8,36 @@ const resultsSection = document.querySelector("#results");
 
 const loaderLogs = document.querySelector("#loaderLogs");
 
-function showLoading() {
+const url = "https://opentdb.com/api.php?amount=20";
+const cache = window.sessionStorage;
+
+function startLoading() {
   // Show
   loadingSection.classList.remove("d-none");
   // Hide
   beginSection.classList.add("d-none");
   inActionSection.classList.add("d-none");
+
+  // Section for api call.
+  cache.clear();
+  window.location.hash = "";
+
+  fetch(url)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      for (i = 0; i < data.results.length; i++) {
+        // Adding 1 every time to {i} because we need the questions to start from 1, not from 0. 🤟
+        cache.setItem(`question-${i + 1}`, JSON.stringify(data.results[i]));
+      }
+      endLoading();
+    })
+    .catch(function (error) {
+      loaderLogs.innerHTML = error;
+    });
 }
-function hideLoading() {
+function endLoading() {
   // Animation
   loadingSection.classList.add("animate__animated", "animate__backOutDown");
   setTimeout(function () {
@@ -27,31 +49,9 @@ function hideLoading() {
   }, 500);
 }
 
-// Section for api call.
-const url = "https://opentdb.com/api.php?amount=20";
-const cache = window.localStorage;
-cache.clear();
-window.location.hash = "";
-
-showLoading();
-
-fetch(url)
-  .then(function (response) {
-    return response.json();
-  })
-  .then(function (data) {
-    for (i = 0; i < data.results.length; i++) {
-      // Adding 1 every time to {i} because we need the questions to start from 1, not from 0. 🤟
-      cache.setItem(`question-${i + 1}`, JSON.stringify(data.results[i]));
-    }
-    hideLoading();
-  })
-  .catch(function (error) {
-    loaderLogs.innerHTML = error;
-  });
-
-// Section starting.
+// Section for starting.
 const startBtn = document.querySelector("#startBtn");
+
 startBtn.addEventListener("click", function (e) {
   cache.setItem("correct_points", 0);
   window.location.hash = "question-1";
@@ -67,7 +67,7 @@ startBtn.addEventListener("click", function (e) {
   }, 500);
 });
 
-// Section resetting.
+// Section for resetting.
 const resetBtn = document.querySelectorAll("#resetBtn");
 
 resetBtn.forEach(function (button) {
@@ -85,12 +85,12 @@ window.addEventListener("hashchange", function (e) {
 });
 
 // Section for rendering the question corresponding to the given hash.
-function renderQuestion(data) {
-  let currentQuestionInt = parseInt(data.split("question-")[1]);
-  if (currentQuestionInt <= 20) {
+function renderQuestion(hash) {
+  let currentQuestionInt = parseInt(hash.split("question-")[1]);
+  if (currentQuestionInt >= 1 && currentQuestionInt <= 20) {
     setTimeout(function () {
       let questionContainer = document.querySelector("#questionContainer");
-      let question = JSON.parse(cache.getItem(data));
+      let question = JSON.parse(cache.getItem(hash));
       let questionTitle = document.querySelector("#questionTitle");
       let category = document.querySelector("#category");
       let answersWrapper = document.querySelector("#answersWrapper");
@@ -125,53 +125,52 @@ function renderQuestion(data) {
         `validateAnswer("` + question.correct_answer + `");`
       );
       answersArray.push(node);
-      // Shuffling the buttons order, because we dont want to have the correct answer to be the last object every time.
+      // Shuffling the order for the buttons, because we dont want to have the correct answer to be the last object every time.
       answersArray = answersArray.sort(() => Math.random() - 0.5);
       answersArray.forEach(function (node) {
         answersWrapper.appendChild(node);
       });
     }, 1000);
   } else {
-    showResults();
+    renderResults();
   }
 }
 
 // For validating if the answer is the same as in the object (question.correct_answer).
 function validateAnswer(answer) {
-  if (window.location.hash) {
-    // Animation
-    let questionContainer = document.querySelector("#questionContainer");
-    questionContainer.classList.remove("animate__lightSpeedInLeft");
-    questionContainer.classList.add("animate__lightSpeedOutRight");
+  // Animation
+  let questionContainer = document.querySelector("#questionContainer");
+  questionContainer.classList.remove("animate__lightSpeedInLeft");
+  questionContainer.classList.add("animate__lightSpeedOutRight");
 
-    let hash = location.hash.split("#")[1];
-    let question = JSON.parse(cache.getItem(hash));
-    let currentQuestionInt = parseInt(location.hash.split("question-")[1]);
-    let nextHash = `#question-${currentQuestionInt + 1}`;
-    window.location.hash = nextHash;
-    console.log(answer);
-    if (question.correct_answer === answer) {
-      console.log("CORRECT!");
-      let oldPoints = parseInt(cache.getItem("correct_points"));
-      cache.setItem("correct_points", oldPoints + 1);
-    } else {
-      console.log("INCORRECT!");
-    }
+  let hash = location.hash.split("#")[1];
+  let question = JSON.parse(cache.getItem(hash));
+  let currentQuestionInt = parseInt(location.hash.split("question-")[1]);
+  currentQuestionInt++;
+  let nextHash = `#question-${currentQuestionInt}`;
+
+  if (question.correct_answer === answer) {
+    // If the answer is correct.
+    let oldPoints = parseInt(cache.getItem("correct_points"));
+    oldPoints++;
+    cache.setItem("correct_points", oldPoints);
   } else {
-    console.log("ERR: There is no hash.");
+    // If the answer is not correct.
   }
+
+  window.location.hash = nextHash;
 }
 
 // For rendering the completed questions counter in the inAction section.
 function renderCompletedCounter() {
   let container = document.querySelector("#questionsCompleted");
   let currentQuestion = parseInt(location.hash.split("question-")[1]);
-  let questionsCompleted = currentQuestion;
+  let questionsCompleted = currentQuestion - 1;
   container.innerText = questionsCompleted;
 }
 
 // For rendering the correct questions counter in the results section.
-function showResults() {
+function renderResults() {
   window.location.hash = "results";
 
   let container = document.querySelector("#questionsCorrect");
@@ -188,12 +187,7 @@ function showResults() {
     resultsSection.classList.add("animate__animated", "animate__heartBeat");
 
     cache.setItem("correct_points", 0);
-    window.location.hash = "question-1";
   }, 1000);
 }
 
-// Section for helpful functions.
-
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+startLoading();
